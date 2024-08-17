@@ -1,3 +1,4 @@
+"use client";
 import getPaginationRange from "@/utils/getPaginationRange";
 import { useEffect, useState } from "react";
 
