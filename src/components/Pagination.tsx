@@ -1,4 +1,5 @@
-"use client";
+'use client';
+
 import getPaginationRange from "@/utils/getPaginationRange";
 import { useEffect, useState } from "react";
 
@@ -10,22 +11,25 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ setCurrPage, currPage, totalPages }) => {
-    const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState<number>(typeof window !== 'undefined' ? window.innerWidth : 0);
 
   useEffect(() => {
-    // Function to update state with the current window width
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
+    // Make sure the code only runs in the client
+    if (typeof window !== 'undefined') {
+      // Function to update state with the current window width
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
 
-    // Add event listener for window resize
-    window.addEventListener('resize', handleResize);
+      // Add event listener for window resize
+      window.addEventListener('resize', handleResize);
 
-    // Cleanup function to remove event listener when component unmounts
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }); 
+      // Cleanup function to remove event listener when component unmounts
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+  }, []); // Empty dependency array ensures this effect runs only once
 
   // Get the range of pages
   const array = getPaginationRange(currPage, totalPages, windowWidth);
@@ -44,9 +48,13 @@ const Pagination: React.FC<PaginationProps> = ({ setCurrPage, currPage, totalPag
               <span aria-hidden="true">&laquo;</span>
             </button>
           </li>
-          {array.map((page:number, index:number) => (
+          {array.map((page: number, index: number) => (
             <li key={index} className={`page-item`}>
-              <button className={`btn ${page === currPage && "btn-primary"}`} style={{borderRadius:'0', border:'0.5px solid rgb(0, 0, 0, 0.2)'}} onClick={() => setCurrPage(page)}>
+              <button
+                className={`btn ${page === currPage && "btn-primary"}`}
+                style={{ borderRadius: "0", border: "0.5px solid rgb(0, 0, 0, 0.2)" }}
+                onClick={() => setCurrPage(page)}
+              >
                 {page}
               </button>
             </li>
